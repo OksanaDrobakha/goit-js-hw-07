@@ -3,31 +3,38 @@ import { galleryItems } from "./gallery-items.js";
 
 console.log(galleryItems);
 
-const imagesContainer = document.querySelector(".gallery");
-// const imgElements = galleryItems.reduce(
-//   (acum, item) =>
-//     (acum += `<img src=${item.preview} title=${item.description} alt=${item.description}/>`),
-//   ""
-// );
-// imagesContainer.insertAdjacentHTML("beforeend", imgElements);
-const images = [];
-galleryItems.forEach((item) => {
-  const galleryContainer = document.createElement("div");
-  galleryContainer.classList.add("gallery__item");
+const gallery = document.querySelector(".gallery");
 
-  const galleryLink = document.createElement("a");
-  galleryLink.classList.add("gallery__link");
-  galleryLink.href = item.original;
+const imgElements = galleryItems.reduce(
+  (acum, { preview, original, description }) =>
+    (acum += `<div class="gallery__item">
+  <a class="gallery__link" href="${original}">
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+</div>`),
+  ""
+);
 
-  const galleryImage = document.createElement("img");
-  galleryImage.classList.add("gallery__image");
-  galleryImage.href = item.preview;
-  galleryImage.setAttribute("data-source", item.original);
-  galleryImage.alt = item.description;
+gallery.insertAdjacentHTML("beforeend", imgElements);
 
-  galleryContainer.append(galleryLink);
-  galleryLink.append(galleryImage);
-  images.push(galleryContainer);
+console.log("imgElements: ", imgElements);
+
+document.addEventListener("click", (eventModal) => {
+  eventModal.preventDefault();
+
+  if (eventModal.target.nodeName !== "img") {
+    return;
+  }
+  const imageChoice = eventModal.target.getAttribute("data-source");
+
+  const instance = basicLightbox.create(`
+    <img src=${item.preview} width="800" height="600">
+`);
+
+  instance.show();
 });
-
-imagesContainer.append(...images);
