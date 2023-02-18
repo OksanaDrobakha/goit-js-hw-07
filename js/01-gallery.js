@@ -30,11 +30,27 @@ document.addEventListener("click", (eventModal) => {
   if (eventModal.target.nodeName !== "img") {
     return;
   }
-  const imageChoice = eventModal.target.getAttribute("data-source");
 
-  const instance = basicLightbox.create(`
-    <img src=${item.preview} width="800" height="600">
-`);
+  const instance = basicLightbox.create(
+    `
+    <img src=${galleryItems.original} width="800" height="600">
+`,
+    {
+      onShow: () => {
+        document.addEventListener("keydown", closeModal);
+      },
+
+      onClose: () => {
+        document.addEventListener("keydown", closeModal);
+      },
+    }
+  );
 
   instance.show();
+
+  function closeModal(eventModal) {
+    if (eventModal.key === "Escape") {
+      instance.close();
+    }
+  }
 });
