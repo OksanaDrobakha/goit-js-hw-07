@@ -1,8 +1,6 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-console.log(galleryItems);
-
 const gallery = document.querySelector(".gallery");
 
 const imgElements = galleryItems.reduce(
@@ -22,18 +20,16 @@ const imgElements = galleryItems.reduce(
 
 gallery.insertAdjacentHTML("beforeend", imgElements);
 
-console.log("imgElements: ", imgElements);
+document.addEventListener("click", (e) => {
+  e.preventDefault();
 
-document.addEventListener("click", (eventModal) => {
-  eventModal.preventDefault();
-
-  if (eventModal.target.nodeName !== "img") {
+  if (e.target.nodeName !== "IMG") {
     return;
   }
-
+  const imgSelected = e.target.getAttribute("data-source");
   const instance = basicLightbox.create(
     `
-    <img src=${galleryItems.original} width="800" height="600">
+    <img src=${imgSelected} width="800" height="600">
 `,
     {
       onShow: () => {
@@ -41,15 +37,15 @@ document.addEventListener("click", (eventModal) => {
       },
 
       onClose: () => {
-        document.addEventListener("keydown", closeModal);
+        document.removeEventListener("keydown", closeModal);
       },
     }
   );
 
   instance.show();
 
-  function closeModal(eventModal) {
-    if (eventModal.key === "Escape") {
+  function closeModal(e) {
+    if (e.key === "Escape") {
       instance.close();
     }
   }
